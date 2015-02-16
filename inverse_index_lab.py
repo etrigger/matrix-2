@@ -2,8 +2,8 @@
 coursera = 1
 # Please fill out this stencil and submit using the provided submission script.
 
-
-
+from random import randint
+from dictutil import *
 
 
 ## 1: (Task 1) Movie Review
@@ -13,7 +13,9 @@ def movie_review(name):
     Input: the name of a movie
     Output: a string (one of the review options), selected at random using randint
     """
-    return ...
+    review_options = ["See it!", "A gem!", "Ideological claptrap!"]
+    return review_options[randint(0, len(review_options)-1)]
+
 
 
 
@@ -32,7 +34,16 @@ def makeInverseIndex(strlist):
     >>> makeInverseIndex(['hello world','hello','hello cat','hellolot of cats']) == {'hello': {0, 1, 2}, 'cat': {2}, 'of': {3}, 'world': {0}, 'cats': {3}, 'hellolot': {3}}
     True
     """
-    pass
+    list_of_words = []
+    list2=[]
+    for key in strlist:
+        list_of_words.append(key)
+        words = {k:v for (k,v) in enumerate(list_of_words)}
+    t = list(words.values())
+    for e in t:
+        list2.extend(e.split())
+    return { word : set(txt for txt, wrds in words.items() if word in wrds.split()) for word in list2}
+
 
 
 
@@ -49,7 +60,13 @@ def orSearch(inverseIndex, query):
     >>> orSearch(idx, ['Johann', 'Carl'])
     {0, 2, 3, 4, 5}
     """
-    pass
+    results = set()
+    for e in query:
+        if e in inverseIndex.keys():
+            value = inverseIndex[e]
+            results.update(value)
+    return results
+
 
 
 
@@ -66,5 +83,15 @@ def andSearch(inverseIndex, query):
     >>> andSearch(idx, ['Johann', 'Bach'])
     {0, 4}
     """
-    pass
+    results1 = []
+    results2 = set()
+    for e in query:
+        if e in inverseIndex.keys():
+            value = inverseIndex[e]
+            results1.extend(value)
+    for doc_id in results1:
+        if results1.count(doc_id)== len(query):
+            results2.update({doc_id})
+    return results2
+
 
