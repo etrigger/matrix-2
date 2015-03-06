@@ -43,7 +43,7 @@ def create_voting_dict():
     mylist= []
     d = {}
     for e in voting_data:
-        splitted = e.split(" ")
+        splitted = e.split(" ")crat
         l.append(splitted)
     for e in l:
         spl = e[3:]

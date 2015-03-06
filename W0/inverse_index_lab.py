@@ -3,6 +3,7 @@ coursera = 1
 # Please fill out this stencil and submit using the provided submission script.
 
 from random import randint
+from imp import reload
 from dictutil import *
 
 
