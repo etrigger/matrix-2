@@ -2,8 +2,9 @@
 coursera = 1
 # Please fill out this stencil and submit using the provided submission script.
 
-from vec import Vec
-
+from vec import *
+from itertools import product
+from GF2 import one
 
 
 ## 1: (Problem 1) Vector Comprehension and Sum
@@ -17,7 +18,11 @@ def vec_select(veclist, k):
     >>> vec_select([v1, v2, v3, v4], 'a') == [Vec(D,{'b': 1}), Vec(D,{'b': 2})]
     True
     '''
-    pass
+    l=[]
+    for e in veclist:
+        if e[k]==0:
+            l.append(e)
+    return l
 
 def vec_sum(veclist, D):
     '''
@@ -29,7 +34,14 @@ def vec_sum(veclist, D):
     >>> vec_sum([v1, v2, v3, v4], D) == Vec(D, {'b': 13, 'a': 11})
     True
     '''
-    pass
+    output_dict = {}
+    for d in D:
+        val = 0
+        for e in veclist:
+            if d in e.f:
+                val += e.f[d]
+                output_dict[d]= val
+    return Vec(D,output_dict)
 
 def vec_select_sum(veclist, k, D):
     '''
@@ -41,7 +53,7 @@ def vec_select_sum(veclist, k, D):
     >>> vec_select_sum([v1, v2, v3, v4], 'a', D) == Vec(D, {'b': 3})
     True
     '''
-    pass
+    return vec_sum(vec_select(veclist, k), D)
 
 
 
@@ -56,9 +68,10 @@ def scale_vecs(vecdict):
     >>> [v in [Vec({1,2,4},{2: 3.0}), Vec({1,2,4},{1: 0.2, 2: 0.4, 4: 1.6})] for v in result]
     [True, True]
     '''
-    pass
+    return [vecdict[k]/k for k in vecdict.keys()]
 
 
+from GF2 import one
 
 ## 3: (Problem 3) Constructing span of given vectors over GF(2)
 def GF2_span(D, S):
@@ -75,30 +88,30 @@ def GF2_span(D, S):
     >>> S == {Vec({0, 1},{1: one}), Vec({0, 1},{0: one})}
     True
     '''
-    pass
+    return [sum([a*v for (a,v) in zip(i,S)]) for i in product({0,one},repeat=len(S))] if len(S) !=0 else Vec(D,{})
 
 
 
 ## 4: (Problem 4) Is it a vector space 1
 # Answer with a boolean, please.
-is_a_vector_space_1 = ...
+is_a_vector_space_1 = False
 
 
 
 ## 5: (Problem 5) Is it a vector space 2
 # Answer with a boolean, please.
-is_a_vector_space_2 = ...
+is_a_vector_space_2 = True
 
 
 
 ## 6: (Problem 6) Is it a vector space 3
 # Answer with a boolean, please.
-is_a_vector_space_3 = ...
+is_a_vector_space_3 = False
 
 
 
 ## 7: (Problem 7) Is it a vector space 4
 # Answer with a boolean, please.
-is_a_vector_space_4a = ...
-is_a_vector_space_4b = ...
+is_a_vector_space_4a = True
+is_a_vector_space_4b = False
 
