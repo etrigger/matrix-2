@@ -1,3 +1,7 @@
+# version code 542eddf1f327+
+coursera = 1
+# Please fill out this stencil and submit using the provided submission script.
+
 # Copyright 2013 Philip N. Klein
 from vec import Vec
 
@@ -13,7 +17,7 @@ def getitem(M, k):
     0
     """
     assert k[0] in M.D[0] and k[1] in M.D[1]
-    pass
+    return M.f[k] if k in M.f else 0
 
 def setitem(M, k, val):
     """
@@ -33,7 +37,7 @@ def setitem(M, k, val):
     True
     """
     assert k[0] in M.D[0] and k[1] in M.D[1]
-    pass
+    M.f[k]= val
 
 def add(A, B):
     """
@@ -57,7 +61,12 @@ def add(A, B):
     True
     """
     assert A.D == B.D
-    pass
+    C = Mat((A.D[0],A.D[1]), {})
+    for d in A.D[0]:
+        for k in A.D[1]:
+            c = A[d,k] + B[d,k]
+            C[d,k]=c
+    return C
 
 def scalar_mul(M, x):
     """
@@ -71,7 +80,10 @@ def scalar_mul(M, x):
     >>> 0.25*M == Mat(({1,3,5}, {2,4}), {(1,2):1.0, (5,4):0.5, (3,4):0.75})
     True
     """
-    pass
+    C = Mat((M.D[0],M.D[1]), {})
+    for (k,v) in M.f.items():
+        C.f[k] = x*v
+    return C     
 
 def equal(A, B):
     """
@@ -90,7 +102,11 @@ def equal(A, B):
     True
     """
     assert A.D == B.D
-    pass
+    for d in A.D[0]:
+        for k in A.D[1]:
+            if A[d,k] != B[d,k]:
+                return False   
+    return True
 
 def transpose(M):
     """
@@ -104,7 +120,11 @@ def transpose(M):
     >>> M.transpose() == Mt
     True
     """
-    pass
+    d = {}
+    for (k,v) in M.f.items():
+         new_key = (k[1], k[0])
+         d[new_key]=v
+    return Mat((M.D[1],M.D[0]), d)
 
 def vector_matrix_mul(v, M):
     """
@@ -124,7 +144,9 @@ def vector_matrix_mul(v, M):
     True
     """
     assert M.D[0] == v.D
-    pass
+    w = {col:Vec(M.D[0], {row:M[row,col] for row in M.D[0]}) for col in M.D[1]}
+    d = {e:v*w[e] for e in w}
+    return Vec(M.D[1], d)
 
 def matrix_vector_mul(M, v):
     """
@@ -143,7 +165,9 @@ def matrix_vector_mul(M, v):
     True
     """
     assert M.D[1] == v.D
-    pass
+    w = {row:Vec(M.D[1], {col:M[row,col] for col in M.D[1]}) for row in M.D[0]}
+    d = {e:w[e]*v for e in w}
+    return Vec(M.D[0], d)
 
 def matrix_matrix_mul(A, B):
     """
@@ -169,7 +193,10 @@ def matrix_matrix_mul(A, B):
     True
     """
     assert A.D[1] == B.D[0]
-    pass
+    v ={col:Vec(B.D[0], {row:B[row,col] for row in B.D[0]}) for col in B.D[1]}
+    w = {row:Vec(A.D[1], {col:A[row,col] for col in A.D[1]}) for row in A.D[0]}
+    d = {(i,j):w[i]*v[j] for i in w for j in v if w[i]*v[j] != 0}
+    return Mat((A.D[0],B.D[1]), d)
 
 ################################################################################
 
